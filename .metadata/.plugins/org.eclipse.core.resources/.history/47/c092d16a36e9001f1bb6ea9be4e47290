@@ -1,0 +1,107 @@
+package com.sbi.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
+
+public class LoginPage extends JFrame {
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JLabel messageLabel;
+
+    public LoginPage() {
+        // Set frame properties
+        setTitle("State Bank of India");
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLayout(new GridLayout(4, 1));
+
+        // Set SBI logo as frame icon
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/resources/sbi-logo.png"));
+        setIconImage(logoIcon.getImage());
+
+        // Username Field
+        JPanel userPanel = new JPanel();
+        userPanel.add(new JLabel("Username:"));
+        // Set width 200px, height 30px
+        usernameField = new JTextField();
+        usernameField.setPreferredSize(new Dimension(200, 30));
+        userPanel.add(usernameField);
+        add(userPanel);
+
+
+        // Password Field
+        JPanel passPanel = new JPanel();
+        passPanel.add(new JLabel("Password:"));
+        passwordField = new JPasswordField();
+        passwordField.setPreferredSize(new Dimension(200, 30));
+        passPanel.add(passwordField);
+        add(passPanel);
+
+        // Message Label
+        messageLabel = new JLabel("", SwingConstants.CENTER);
+        messageLabel.setForeground(Color.RED);
+        add(messageLabel);
+
+        // Login Button
+        JButton loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(200, 40)); // Width: 200px, Height: 40px
+        loginButton.addActionListener(new LoginAction());
+        JPanel buttonPanel = new JPanel(); // Create a panel to center the button
+        buttonPanel.add(loginButton);
+        add(buttonPanel);
+
+
+        // Make frame visible
+        setVisible(true);
+    }
+
+    // Validation for username and password
+    private boolean validateInputs(String username, String password) {
+    	if(username.length() == 0) {
+    		messageLabel.setText("Username is required.");
+            return false;
+    	}
+    	
+    	if(password.length() == 0) {
+    		messageLabel.setText("Password is required.");
+            return false;
+    	}
+    	
+        if (username.length() > 100) {
+            messageLabel.setText("Username must be max 100 characters.");
+            return false;
+        }
+
+        // Password regex: At least 1 uppercase, 1 lowercase, 1 digit, 1 special char, length 5-25
+        String passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{5,25}$";
+        if (!Pattern.matches(passwordRegex, password)) {
+            messageLabel.setText("Password must contain 1 Upper, 1 Lower, 1 Digit, 1 Special & be 5-25 chars.");
+            return false;
+        }
+
+        return true;
+    }
+
+    // Action Listener for Login Button
+    private class LoginAction implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String username = usernameField.getText().trim();
+            String password = new String(passwordField.getPassword()).trim();
+
+            if (validateInputs(username, password)) {
+                messageLabel.setForeground(Color.GREEN);
+                messageLabel.setText("Login Successful!"); // Next step: Proceed to Home Screen
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new LoginPage();
+    }
+}

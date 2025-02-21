@@ -1,0 +1,38 @@
+package com.sbi.view;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class WelcomePage extends JFrame {
+    
+    public WelcomePage() {
+        // Set frame title
+        setTitle("State Bank of India");
+
+        // Set frame icon (SBI logo)
+        ImageIcon logoIcon = new ImageIcon("src/resources/sbi-logo.png");
+        setIconImage(logoIcon.getImage());
+
+        // Load welcome image
+        ImageIcon welcomeImage = new ImageIcon("src/resources/welcome.png");
+        JLabel imageLabel = new JLabel(welcomeImage);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+
+        // Set frame to full screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize window
+        setUndecorated(true); // Remove title bar for a clean look
+
+        // Use BorderLayout to stretch the image across the frame
+        setLayout(new BorderLayout());
+        add(imageLabel, BorderLayout.CENTER);
+
+        // Frame settings
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new WelcomePage();
+    }
+}

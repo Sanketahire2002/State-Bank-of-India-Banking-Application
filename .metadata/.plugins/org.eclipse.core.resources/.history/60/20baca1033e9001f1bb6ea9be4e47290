@@ -1,0 +1,51 @@
+package com.sbi.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import javax.media.*;
+
+public class WelcomePage extends JFrame {
+    private Player mediaPlayer;
+
+    public WelcomePage() {
+        // Set frame properties
+        setTitle("State Bank of India");
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Load and set SBI Logo as frame icon
+        ImageIcon logoIcon = new ImageIcon("src/resources/sbi-logo.png");
+        setIconImage(logoIcon.getImage());
+
+        // Load and display background image (optional)
+        JLabel background = new JLabel(new ImageIcon("src/resources/welcome.png"));
+        background.setLayout(new BorderLayout());
+        add(background, BorderLayout.CENTER);
+
+        // Load and play video
+        try {
+            File videoFile = new File("src/resources/welcome.avi");
+            MediaLocator mediaLocator = new MediaLocator(videoFile.toURI().toURL());
+            mediaPlayer = Manager.createRealizedPlayer(mediaLocator);
+            Component videoComponent = mediaPlayer.getVisualComponent();
+
+            if (videoComponent != null) {
+                background.add(videoComponent, BorderLayout.CENTER);
+            }
+
+            mediaPlayer.start(); // Start playing the video
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading video!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(WelcomePage::new);
+    }
+}

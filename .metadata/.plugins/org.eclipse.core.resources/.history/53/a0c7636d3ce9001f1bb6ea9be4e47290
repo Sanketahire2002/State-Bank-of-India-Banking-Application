@@ -1,0 +1,44 @@
+package com.sbi.model;
+
+import java.sql.Blob;
+
+public class User {
+    private int userId;
+    private String username;
+    private String fullName;
+    private String email;
+    private String phone;
+    private String role;
+    private String status;
+    private Blob passportPhoto;  // Stores image as BLOB
+
+    // Constructor
+    public User(int userId, String username, String fullName, String email, 
+                String phone, String role, String status, Blob passportPhoto) {
+        this.userId = userId;
+        this.username = username;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+        this.status = status;
+        this.passportPhoto = passportPhoto;
+    }
+
+    // Getters
+    public int getUserId() { return userId; }
+    public String getUsername() { return username; }
+    public String getFullName() { return fullName; }
+    public String getEmail() { return email; }
+    public String getPhone() { return phone; }
+    public String getRole() { return role; }
+    public String getStatus() { return status; }
+    public Blob getPassportPhoto() { return passportPhoto; }
+
+    // toString() for displaying user info (excluding password for security)
+    @Override
+    public String toString() {
+        return "User ID: " + userId + ", Username: " + username + ", Full Name: " + fullName +
+               ", Email: " + email + ", Phone: " + phone + ", Role: " + role + ", Status: " + status;
+    }
+}

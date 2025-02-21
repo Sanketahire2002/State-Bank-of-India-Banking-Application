@@ -1,0 +1,67 @@
+package com.sbi.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
+
+public class WelcomePage extends JFrame {
+
+    public WelcomePage() {
+        // Set frame title
+        setTitle("State Bank of India");
+
+        // Set full-screen mode
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true); // Remove borders
+
+        // Load and set SBI logo as frame icon
+        try {
+            InputStream logoStream = getClass().getResourceAsStream("/resources/sbi-logo.png");
+            if (logoStream != null) {
+                Image logoImage = ImageIO.read(logoStream);
+                setIconImage(logoImage);
+            } else {
+                System.out.println("Error: sbi-logo.png not found!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Load and display the welcome image
+        try {
+            InputStream imgStream = getClass().getResourceAsStream("/resources/welcome.jpg");
+            if (imgStream != null) {
+                Image img = ImageIO.read(imgStream);
+                Image scaledImg = img.getScaledInstance(
+                        Toolkit.getDefaultToolkit().getScreenSize().width,
+                        Toolkit.getDefaultToolkit().getScreenSize().height,
+                        Image.SCALE_SMOOTH
+                );
+                JLabel backgroundLabel = new JLabel(new ImageIcon(scaledImg));
+                add(backgroundLabel);
+            } else {
+                System.out.println("Error: welcome.png not found!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Set default close operation
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Make frame visible
+        setVisible(true);        
+        
+        try {        	
+            Thread.sleep(3000); // Waits for 3 seconds (3000 ms)
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        
+
+        new LoginPage();
+    }
+}

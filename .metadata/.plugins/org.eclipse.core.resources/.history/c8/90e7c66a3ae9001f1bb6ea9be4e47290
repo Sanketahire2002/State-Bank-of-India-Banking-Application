@@ -1,0 +1,59 @@
+package com.sbi.database;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import org.mindrot.jbcrypt.BCrypt;
+
+public class AdminRegistration {
+
+    // Method to insert an ADMIN user
+    public static void registerAdmin(String username, String password, String fullName, String email, String phone) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        
+        try {
+            // Get database connection
+            conn = DBConnection.getConnection();
+
+            // Hash the password using BCrypt
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+            // SQL query to insert ADMIN
+            String sql = "INSERT INTO users (username, password_hash, full_name, email, phone, role, status) " +
+                         "VALUES (?, ?, ?, ?, ?, 'ADMIN', 'ACTIVE')";
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, hashedPassword);
+            stmt.setString(3, fullName);
+            stmt.setString(4, email);
+            stmt.setString(5, phone);
+
+            // Execute update
+            int rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Admin registered successfully!");
+            } else {
+                System.out.println("Failed to register admin.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Database error during admin registration!");
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Main method (For testing)
+    public static void main(String[] args) {
+        registerAdmin("admin-1", "Admin@123", "SBI Admin", "admin@sbi.com", "9876543211");
+    }
+}

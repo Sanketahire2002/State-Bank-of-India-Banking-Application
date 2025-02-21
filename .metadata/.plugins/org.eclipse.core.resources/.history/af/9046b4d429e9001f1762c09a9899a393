@@ -1,0 +1,57 @@
+package com.sbi.view;
+
+import javax.swing.*;
+import java.awt.*;
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent;
+
+public class WelcomePage extends JFrame {
+
+    private final EmbeddedMediaPlayerComponent mediaPlayerComponent;
+
+    public WelcomePage() {
+        // Set up the frame
+        setTitle("State Bank of India");
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Load SBI logo as frame icon
+        ImageIcon logoIcon = new ImageIcon("src/resources/sbi-logo.png");
+        setIconImage(logoIcon.getImage());
+
+        // Create VLCJ media player component
+        mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+        add(mediaPlayerComponent, BorderLayout.CENTER);
+
+        setVisible(true);
+
+        // Start playing the video
+        playVideo("src/resources/welcome.mp4");
+    }
+
+    private void playVideo(String videoPath) {
+        mediaPlayerComponent.mediaPlayer().media().play(videoPath);
+
+        // Close the welcome page after the video ends
+        new Thread(() -> {
+            while (mediaPlayerComponent.mediaPlayer().status().isPlaying()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {}
+            }
+            dispose(); // Close the welcome page
+            openMainApplication();
+        }).start();
+    }
+
+    // Open the main application after video ends
+    private void openMainApplication() {
+        JOptionPane.showMessageDialog(null, "Main Application Window Opens Here!");
+        // new MainApplication(); // Uncomment when MainApplication.java is implemented
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(WelcomePage::new);
+    }
+}

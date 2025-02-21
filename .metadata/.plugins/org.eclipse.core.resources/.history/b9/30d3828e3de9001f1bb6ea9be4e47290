@@ -1,0 +1,106 @@
+package com.sbi.view;
+
+import com.sbi.database.UserDAO;
+import com.sbi.model.User;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class UserDetailsGUI extends JFrame {
+
+    private JTextField txtUsername;
+    private JButton btnSearch;
+    private JLabel lblFullName, lblEmail, lblPhone, lblRole, lblStatus, lblPhoto;
+
+    public UserDetailsGUI(String userName) {
+        // Set up frame
+        setTitle("State Bank of India - User Details");
+        setSize(500, 500);
+        setLayout(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // SBI Logo
+        ImageIcon logoIcon = new ImageIcon("src/resources/sbi-logo.png");
+        setIconImage(logoIcon.getImage());
+
+        // Username Input
+        JLabel lblEnterUsername = new JLabel("Enter Username:");
+        lblEnterUsername.setBounds(50, 20, 120, 30);
+        add(lblEnterUsername);
+        
+        // Labels for displaying user details
+        lblFullName = new JLabel("Username: ");
+        lblFullName.setBounds(50, 70, 400, 30);
+        add(lblFullName);
+
+        lblFullName = new JLabel("Full Name: ");
+        lblFullName.setBounds(50, 70, 400, 30);
+        add(lblFullName);
+
+        lblEmail = new JLabel("Email: ");
+        lblEmail.setBounds(50, 110, 400, 30);
+        add(lblEmail);
+
+        lblPhone = new JLabel("Phone: ");
+        lblPhone.setBounds(50, 150, 400, 30);
+        add(lblPhone);
+
+        lblRole = new JLabel("Role: ");
+        lblRole.setBounds(50, 190, 400, 30);
+        add(lblRole);
+
+        lblStatus = new JLabel("Status: ");
+        lblStatus.setBounds(50, 230, 400, 30);
+        add(lblStatus);
+
+        // Passport Photo Label
+        lblPhoto = new JLabel();
+        lblPhoto.setBounds(150, 270, 150, 150);
+        lblPhoto.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        add(lblPhoto);
+
+        // Button Action Listener
+        searchUser(userName);
+
+        // Make frame visible
+        setVisible(true);
+    }
+
+    // Fetch User Data & Display
+    private void searchUser(String username) {
+    	
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a username!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        User user = UserDAO.getUserByUsername(username);
+        
+        if (user == null) {
+            JOptionPane.showMessageDialog(this, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Update Labels with User Info
+        lblFullName.setText("Full Name: " + user.getFullName());
+        lblEmail.setText("Email: " + user.getEmail());
+        lblPhone.setText("Phone: " + user.getPhone());
+        lblRole.setText("Role: " + user.getRole());
+        lblStatus.setText("Status: " + user.getStatus());
+
+        // Display Passport Photo
+        if (user.getPassportPhoto() != null) {
+            ImageIcon imageIcon = new ImageIcon(user.getPassportPhoto());
+            Image img = imageIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            lblPhoto.setIcon(new ImageIcon(img));
+        } else {
+            lblPhoto.setIcon(null);
+        }
+    }
+
+    // Main Method (To Run the GUI)
+    public static void main(String[] args) {
+        new UserDetailsGUI("admin");
+    }
+}

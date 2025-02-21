@@ -1,0 +1,5 @@
+package com.sbi.model;
+
+public class User {
+
+}

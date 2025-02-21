@@ -1,0 +1,73 @@
+package com.sbi.view;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import javax.media.Manager;
+import javax.media.Player;
+import javax.media.MediaLocator;
+
+public class WelcomePage extends JFrame {
+
+    public WelcomePage() {
+        // Set frame title
+        setTitle("State Bank of India");
+
+        // Set layout
+        setLayout(new BorderLayout());
+
+        // Load and set the SBI logo
+        ImageIcon logoIcon = new ImageIcon("src/resources/sbi-logo.png");
+        setIconImage(logoIcon.getImage());
+
+        // Create a panel for the video
+        JPanel videoPanel = new JPanel(new BorderLayout());
+
+        try {
+            // Load the video file using JMF
+            File videoFile = new File("src/resources/welcome.mp4");
+            MediaLocator mediaLocator = new MediaLocator(videoFile.toURI().toURL());
+
+            Player player = Manager.createRealizedPlayer(mediaLocator);
+            Component video = player.getVisualComponent();
+
+            if (video != null) {
+                videoPanel.add(video, BorderLayout.CENTER);
+            }
+
+            player.start(); // Start playing the video
+
+            // Automatically close the welcome page after the video ends
+            player.addControllerListener(event -> {
+                if (event instanceof javax.media.EndOfMediaEvent) {
+                    player.close();
+                    dispose();  // Close the welcome page
+                    openMainApplication(); // Open main application window
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading video.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        // Add the video panel to the frame
+        add(videoPanel, BorderLayout.CENTER);
+
+        // Set frame properties
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    // Open the main application window (To be implemented later)
+    private void openMainApplication() {
+        JOptionPane.showMessageDialog(null, "Main Application Window Opens Here!");
+        // new MainApplication(); // Uncomment when MainApplication.java is implemented
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(WelcomePage::new);
+    }
+}
